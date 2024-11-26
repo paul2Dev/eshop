@@ -1,0 +1,46 @@
+models:
+  Category:
+    name: string
+    slug: string unique
+    description: text nullable
+    timestamps: true
+    relationships :
+      hasMany: Product
+
+  Product:
+    name: string
+    slug: string unique
+    description: text nullable
+    price: decimal(8,2)
+    stock: integer
+    category_id: unsignedInteger
+    timestamps: true
+    relationships:
+      belongsTo: Category
+      hasMany: Image
+
+  Image:
+    product_id: unsignedInteger
+    file_path: string
+    alt_text: string nullable
+    timestamps: true
+    relationships:
+      belongsTo: Product
+
+  Order:
+    user_id: unseginedInteger
+    total: decimal(10,2)
+    status: string
+    timestamps: true
+    relationships:
+      belongsTo: User
+      hasMany: OrderItem
+
+  OrderItem:
+    order_id: unseginedInteger
+    product_id: unseginedInteger
+    quantity: integer
+    price: decimal(8,2) nullable
+    timestamps: true
+    relationships:
+      belongsTo: Order, Product
