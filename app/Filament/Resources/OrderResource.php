@@ -72,7 +72,7 @@ class OrderResource extends Resource
         ])
         ->defaultSort('id', 'desc')
         ->filters([
-            Tables\Filters\TrashedFilter::make(),
+            //Tables\Filters\TrashedFilter::make(),
         ])
         ->actions([
             Tables\Actions\EditAction::make(),
