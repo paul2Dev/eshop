@@ -56,8 +56,8 @@ class OrderResource extends Resource
             TextColumn::make('id')
             ->label('Order ID')
             ->sortable(),
-            TextColumn::make('user.name')->sortable(),
-            TextColumn::make('total')->money('USD'),
+            TextColumn::make('user.name')->sortable()->searchable(),
+            TextColumn::make('total')->money('USD')->sortable(),
             TextColumn::make('status')
                     ->label('Status')
                     ->badge()
@@ -68,7 +68,7 @@ class OrderResource extends Resource
                         'success' => OrderStatus::Completed->value,
                         'danger' => OrderStatus::Canceled->value,
                     ]),
-            TextColumn::make('created_at')->dateTime(),
+            TextColumn::make('created_at')->dateTime()->sortable(),
         ])
         ->defaultSort('id', 'desc')
         ->filters([

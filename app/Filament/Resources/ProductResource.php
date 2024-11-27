@@ -68,10 +68,10 @@ class ProductResource extends Resource
             return $action->button()->label('Filters');
         })->columns([
             TextColumn::make('name')->sortable()->searchable(),
-            TextColumn::make('price')->money('USD'),
-            TextColumn::make('stock')->sortable(),
-            TextColumn::make('category.name')->label('Category')->sortable(),
-            TextColumn::make('created_at')->dateTime(),
+            TextColumn::make('price')->money('USD')->sortable(),
+            TextColumn::make('stock')->sortable()->sortable(),
+            TextColumn::make('category.name')->label('Category')->sortable()->searchable(),
+            TextColumn::make('created_at')->dateTime()->sortable(),
         ])
         ->defaultSort('id', 'desc')
         ->filters([
