@@ -18,6 +18,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\DecimalInput;
 use App\Models\Product;
+use Filament\Notifications\Notification;
 
 class OrderItemResource extends Resource
 {
@@ -108,10 +109,16 @@ class OrderItemResource extends Resource
             // Find the product by its ID
             $product = Product::find($productId);
 
-            if ($product) {
+            if ($product && $product->stock > 0) {
                 $quantity = $get('quantity') ?? 1; // Default to 1 if quantity is not provided
                 $calculatedPrice = $product->price * $quantity; // Calculate price
                 $set('price', $calculatedPrice); // Set the price field with 2 decimal places
+            } else {
+                $set('price', 0); // Set the price to 0 if the product is not found or out of stock
+                Notification::make()
+                ->title('Product '.$product->name.' is out of stock')
+                ->danger()
+                ->send();
             }
         }
     }
