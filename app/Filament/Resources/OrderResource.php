@@ -49,7 +49,10 @@ class OrderResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table->columns([
+        return $table
+        ->filtersTriggerAction(function ($action) {
+            return $action->button()->label('Filters');
+        })->columns([
             TextColumn::make('id')
             ->label('Order ID')
             ->sortable(),

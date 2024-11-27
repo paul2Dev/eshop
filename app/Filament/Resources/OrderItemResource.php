@@ -65,7 +65,10 @@ class OrderItemResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table->columns([
+        return $table
+        ->filtersTriggerAction(function ($action) {
+            return $action->button()->label('Filters');
+        })->columns([
             TextColumn::make('order_id')
                 ->label('Order ID')
                 ->sortable(),

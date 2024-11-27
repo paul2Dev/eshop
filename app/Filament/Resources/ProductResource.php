@@ -63,7 +63,10 @@ class ProductResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table->columns([
+        return $table
+        ->filtersTriggerAction(function ($action) {
+            return $action->button()->label('Filters');
+        })->columns([
             TextColumn::make('name')->sortable()->searchable(),
             TextColumn::make('price')->money('USD'),
             TextColumn::make('stock')->sortable(),

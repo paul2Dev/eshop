@@ -39,7 +39,11 @@ class CategoryResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table->columns([
+        return $table
+        ->filtersTriggerAction(function ($action) {
+            return $action->button()->label('Filters');
+        })
+        ->columns([
             TextColumn::make('name')->sortable()->searchable(),
             TextColumn::make('slug')->sortable()->searchable(),
             TextColumn::make('created_at')->dateTime(),
