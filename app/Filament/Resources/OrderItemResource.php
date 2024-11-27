@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\OrderItemResource\Pages;
 use App\Filament\Resources\OrderItemResource\RelationManagers;
+use App\Models\Order;
 use App\Models\OrderItem;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -30,38 +31,7 @@ class OrderItemResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form->schema([
-            Select::make('order_id')
-                ->relationship('order', 'id')
-                ->required(),
-            Select::make('product_id')
-                ->label('Product')
-                ->relationship('product', 'name')// Populate with available products
-                ->required()
-                ->reactive() // Make it reactive so we can recalculate price when the product is selected
-                ->afterStateUpdated(function (callable $set, callable $get) {
-                    return self::setPrice($set, $get); // Static call to the setPrice method
-                }),
-
-             // Quantity field (DecimalInput replaced with TextInput)
-            TextInput::make('quantity')
-                ->label('Quantity')
-                ->type('number') // Use type number for quantity
-                ->default(1)
-                ->required()
-                ->reactive()
-                ->afterStateUpdated(function (callable $set, callable $get) {
-                    return self::setPrice($set, $get); // Static call to the setPrice method
-                }),
-
-            // Price field (using TextInput)
-            TextInput::make('price')
-                ->label('Price')
-                ->required()
-                ->disabled() // Disable the field so the price is auto-calculated
-                ->numeric()
-                ->dehydrated()
-                ]);
+        return $form->schema(OrderItem::getForm());
     }
 
     public static function table(Table $table): Table
@@ -80,15 +50,19 @@ class OrderItemResource extends Resource
         ])
         ->defaultSort('id', 'desc')
         ->filters([
-            //
+            Tables\Filters\TrashedFilter::make(),
         ])
         ->actions([
             Tables\Actions\EditAction::make(),
             Tables\Actions\DeleteAction::make(),
+            Tables\Actions\ForceDeleteAction::make(),
+            Tables\Actions\RestoreAction::make(),
         ])
         ->bulkActions([
             Tables\Actions\BulkActionGroup::make([
                 Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\ForceDeleteBulkAction::make(),
+                Tables\Actions\RestoreBulkAction::make(),
             ]),
         ]);
     }
@@ -100,27 +74,5 @@ class OrderItemResource extends Resource
             'create' => Pages\CreateOrderItem::route('/create'),
             'edit' => Pages\EditOrderItem::route('/{record}/edit'),
         ];
-    }
-
-    public static function setPrice(callable $set, callable $get)
-    {
-        // Ensure product_id and quantity are set
-        if ($productId = $get('product_id') ?? null) {
-            // Find the product by its ID
-            $product = Product::find($productId);
-
-            if ($product && $product->stock > 0) {
-                $quantity = $get('quantity') ?? 1; // Default to 1 if quantity is not provided
-                $calculatedPrice = $product->price * $quantity; // Calculate price
-                $set('price', $calculatedPrice); // Set the price field with 2 decimal places
-            } else {
-                $set('price', 0); // Set the price to 0 if the product is not found or out of stock
-                Notification::make()
-                ->title('Product '.$product->name.' is out of stock')
-                ->danger()
-                ->persistent()
-                ->send();
-            }
-        }
     }
 }

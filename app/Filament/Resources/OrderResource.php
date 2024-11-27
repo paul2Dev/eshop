@@ -17,6 +17,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use App\Enums\OrderStatus;
+use Filament\Forms\Components\Placeholder;
 
 class OrderResource extends Resource
 {
@@ -34,12 +35,11 @@ class OrderResource extends Resource
                 ->relationship('user', 'name')
                 ->required()
                 ->disabled(fn ($get) => $get('id') !== null),
-            TextInput::make('total')
-                ->type('number') // Use type number to handle decimals
-                ->step(0.01)
-                ->disabled()
-                ->default(0)
-                ->dehydrated(),
+            Placeholder::make('total')
+                ->label('Total')
+                ->content(function (Order $record) {
+                    return $record->total ? $record->total : null;
+                }),
             Select::make('status')
                 ->enum(OrderStatus::class)
                 ->options(OrderStatus::class)
@@ -104,5 +104,12 @@ class OrderResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            RelationManagers\OrderItemsRelationManager::class,
+        ];
     }
 }

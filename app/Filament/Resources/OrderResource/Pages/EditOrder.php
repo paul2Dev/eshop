@@ -5,6 +5,8 @@ namespace App\Filament\Resources\OrderResource\Pages;
 use App\Filament\Resources\OrderResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\Facades\Log;
+use Livewire\Attributes\On;
 
 class EditOrder extends EditRecord
 {
@@ -23,5 +25,11 @@ class EditOrder extends EditRecord
             Actions\RestoreAction::make(),
             // ...
         ];
+    }
+
+    #[On('refreshProducts')]
+    public function refresh(): void
+    {
+        Log::info('refreshProducts');
     }
 }
