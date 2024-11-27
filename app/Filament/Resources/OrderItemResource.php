@@ -118,6 +118,7 @@ class OrderItemResource extends Resource
                 Notification::make()
                 ->title('Product '.$product->name.' is out of stock')
                 ->danger()
+                ->persistent()
                 ->send();
             }
         }
