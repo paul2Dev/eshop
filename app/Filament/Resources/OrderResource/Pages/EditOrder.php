@@ -30,6 +30,5 @@ class EditOrder extends EditRecord
     #[On('refreshProducts')]
     public function refresh(): void
     {
-        Log::info('refreshProducts');
     }
 }
