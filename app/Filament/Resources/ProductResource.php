@@ -100,4 +100,11 @@ class ProductResource extends Resource
             'edit' => Pages\EditProduct::route('/{record}/edit'),
         ];
     }
+
+    public static function getRelations(): array
+    {
+        return [
+            RelationManagers\ReviewsRelationManager::class,
+        ];
+    }
 }

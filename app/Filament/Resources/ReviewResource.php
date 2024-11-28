@@ -19,6 +19,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use App\Enums\ReviewStatus;
 
+
 class ReviewResource extends Resource
 {
     protected static ?string $model = Review::class;
@@ -30,30 +31,7 @@ class ReviewResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Select::make('product_id')
-                    ->label('Product')
-                    ->relationship('product', 'name')
-                    ->required()
-                    ->disabled(fn ($get) => $get('id') !== null),
-                Select::make('user_id')
-                    ->label('User')
-                    ->relationship('user', 'name')
-                    ->required(),
-                TextInput::make('rating')
-                    ->label('Rating')
-                    ->required(),
-                TextInput::make('title')
-                    ->label('Title')
-                    ->required(),
-                Textarea::make('comment')
-                    ->label('Comment')
-                    ->required(),
-                Select::make('status')
-                    ->enum(ReviewStatus::class)
-                    ->options(ReviewStatus::class)
-                    ->required(),
-            ]);
+            ->schema(Review::getForm());
     }
 
     public static function table(Table $table): Table
@@ -80,14 +58,9 @@ class ReviewResource extends Resource
             ])
             ->defaultSort('id', 'desc')
             ->filters([
-                //
+                Tables\Filters\TrashedFilter::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\ForceDeleteAction::make(),
-                Tables\Actions\RestoreAction::make(),
-            ])
+            ->actions(Review::getActions())
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
