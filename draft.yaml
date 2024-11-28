@@ -17,7 +17,7 @@ models:
     timestamps: true
     relationships:
       belongsTo: Category
-      hasMany: Image
+      hasMany: Image, Review
 
   Image:
     product_id: unsignedInteger
@@ -44,3 +44,14 @@ models:
     timestamps: true
     relationships:
       belongsTo: Order, Product
+
+  Review:
+    product_id: unsignedInteger
+    user_id: unsignedInteger
+    rating: integer
+    title: string
+    comment: text nullable
+    status: string
+    timestamps: true
+    relationships:
+      belongsTo: Product, User

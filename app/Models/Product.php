@@ -28,6 +28,11 @@ class Product extends Model
         return $this->hasMany(Image::class);
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
     protected static function booted()
     {
         static::deleting(function (Product $product) {
@@ -36,7 +41,15 @@ class Product extends Model
                 $product->images()->get()->each(function (Image $image) {
                     $image->forceDeleteWithFile();
                 });
+                $product->reviews()->forceDelete();
+            } else {
+                $product->reviews()->delete();
             }
+        });
+
+        static::restoring(function (Product $product) {
+            // Restore associated images and reviews
+            $product->reviews()->withTrashed()->restore();
         });
     }
 }
