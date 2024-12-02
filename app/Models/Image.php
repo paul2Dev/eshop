@@ -21,6 +21,11 @@ class Image extends Model
         return $this->belongsTo(Product::class);
     }
 
+    public function productVariation()
+    {
+        return $this->belongsTo(ProductVariation::class);
+    }
+
     /**
      * Force delete the image and remove its file from storage.
      */

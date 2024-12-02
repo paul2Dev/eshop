@@ -33,6 +33,11 @@ class OrderItem extends Model
         return $this->belongsTo(Product::class);
     }
 
+    public function productVariation()
+    {
+        return $this->belongsTo(ProductVariation::class);
+    }
+
     // Recalculate order total when order item is created or updated
     protected static function booted()
     {

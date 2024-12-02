@@ -1,7 +1,16 @@
 created:
-    - database/factories/ReviewFactory.php
-    - database/migrations/2024_11_28_091916_create_reviews_table.php
-    - app/Models/Review.php
+    - database/factories/ProductVariationFactory.php
+    - database/factories/AttributeFactory.php
+    - database/factories/AttributeValueFactory.php
+    - database/factories/VariationAttributeFactory.php
+    - database/migrations/2024_12_02_120640_create_product_variations_table.php
+    - database/migrations/2024_12_02_120641_create_attributes_table.php
+    - database/migrations/2024_12_02_120642_create_attribute_values_table.php
+    - database/migrations/2024_12_02_120643_create_variation_attributes_table.php
+    - app/Models/ProductVariation.php
+    - app/Models/Attribute.php
+    - app/Models/AttributeValue.php
+    - app/Models/VariationAttribute.php
 models:
     User: { name: string, email: string, email_verified_at: 'timestamp nullable', password: string, remember_token: 'string:100 nullable' }
     Category: { name: string, slug: 'string unique', description: 'text nullable', timestamps: timestamps, relationships: { hasMany: Product } }
@@ -10,3 +19,7 @@ models:
     Order: { user_id: unseginedInteger, total: 'decimal(10,2)', status: string, timestamps: timestamps, relationships: { belongsTo: User, hasMany: OrderItem } }
     OrderItem: { order_id: unseginedInteger, product_id: unseginedInteger, quantity: integer, price: 'decimal(8,2) nullable', timestamps: timestamps, relationships: { belongsTo: 'Order, Product' } }
     Review: { product_id: unsignedInteger, user_id: unsignedInteger, rating: integer, title: string, comment: 'text nullable', timestamps: timestamps, relationships: { belongsTo: 'Product, User' } }
+    ProductVariation: { product_id: unsignedInteger, price: 'decimal(8,2) nullable', stock: integer, discount: 'decimal(5,2) nullable', sku: 'string nullable', timestamps: timestamps, relationships: { belongsTo: Product, hasMany: 'VariationAttribute, Image' } }
+    Attribute: { name: string, slug: 'string unique', timestamps: timestamps, relationships: { hasMany: AttributeValue } }
+    AttributeValue: { attribute_id: unsignedInteger, value: string, slug: 'string unique', timestamps: timestamps, relationships: { belongsTo: Attribute, hasMany: VariationAttribute } }
+    VariationAttribute: { product_variation_id: unsignedInteger, attribute_value_id: unsignedInteger, timestamps: timestamps, relationships: { belongsTo: 'ProductVariation, AttributeValue' } }

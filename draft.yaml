@@ -11,21 +11,56 @@ models:
     name: string
     slug: string unique
     description: text nullable
-    price: decimal(8,2)
-    stock: integer
+    price: decimal(8,2) # Optional base price for products without variations
+    stock: integer # Optional base stock for products without variations
     category_id: unsignedInteger
     timestamps: true
     relationships:
       belongsTo: Category
-      hasMany: Image, Review
+      hasMany: Image, Review, ProductVariation
+
+  ProductVariation:
+    product_id: unsignedInteger
+    price: decimal(8,2) nullable
+    stock: integer
+    discount: decimal(5,2) nullable
+    sku: string nullable # Unique SKU for tracking
+    timestamps: true
+    relationships:
+      belongsTo: Product
+      hasMany: VariationAttribute, Image
+
+  Attribute:
+    name: string
+    slug: string unique
+    timestamps: true
+    relationships:
+      hasMany: AttributeValue
+
+  AttributeValue:
+    attribute_id: unsignedInteger
+    value: string
+    slug: string unique
+    timestamps: true
+    relationships:
+      belongsTo: Attribute
+      hasMany: VariationAttribute
+
+  VariationAttribute:
+    product_variation_id: unsignedInteger
+    attribute_value_id: unsignedInteger
+    timestamps: true
+    relationships:
+      belongsTo: ProductVariation, AttributeValue
 
   Image:
     product_id: unsignedInteger
+    product_variation_id: unsignedInteger nullable
     file_path: string
     alt_text: string nullable
     timestamps: true
     relationships:
-      belongsTo: Product
+      belongsTo: Product, ProductVariation
 
   Order:
     user_id: unseginedInteger
@@ -39,11 +74,12 @@ models:
   OrderItem:
     order_id: unseginedInteger
     product_id: unseginedInteger
+    product_variation_id: unsignedInteger nullable
     quantity: integer
     price: decimal(8,2) nullable
     timestamps: true
     relationships:
-      belongsTo: Order, Product
+      belongsTo: Order, Product, ProductVariation
 
   Review:
     product_id: unsignedInteger

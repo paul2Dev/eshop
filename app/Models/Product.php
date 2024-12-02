@@ -33,6 +33,11 @@ class Product extends Model
         return $this->hasMany(Review::class);
     }
 
+    public function ProductVariation()
+    {
+        return $this->hasMany(ProductVariation::class);
+    }
+
     protected static function booted()
     {
         static::deleting(function (Product $product) {
