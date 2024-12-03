@@ -40,9 +40,8 @@ class ListReviews extends ListRecords
                 $count = Review::where('status', 'rejected')->count();
                 return $count > 0 ? $count : null;
             })->badgeColor('danger'),
-            'deleted' => Tab::make('Deleted')->modifyQueryUsing(function ($query) {
-                $query->onlyTrashed();
-            })->badge(function () {
+            'deleted' => Tab::make('Deleted')->modifyQueryUsing(fn ($query) => $query->onlyTrashed())
+            ->badge(function () {
                 $count = Review::onlyTrashed()->count();
                 return $count > 0 ? $count : null;
             })->badgeColor('danger'),

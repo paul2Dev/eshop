@@ -58,7 +58,7 @@ class ReviewResource extends Resource
             ])
             ->defaultSort('id', 'desc')
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                //Tables\Filters\TrashedFilter::make(),
             ])
             ->actions(Review::getActions())
             ->bulkActions([
@@ -75,14 +75,6 @@ class ReviewResource extends Resource
         return [
             //
         ];
-    }
-
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
     }
 
     public static function getPages(): array

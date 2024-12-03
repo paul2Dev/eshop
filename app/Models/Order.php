@@ -13,6 +13,7 @@ class Order extends Model
     use HasFactory;
     use SoftDeletes;
 
+    protected $cascadeDeletes = ['orderItems'];
 
     protected $casts = [
         'id' => 'integer',

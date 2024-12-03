@@ -21,6 +21,8 @@ use Filament\Forms\Components\HasManyRepeater;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 
+use Illuminate\Validation\ValidationException;
+
 class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
@@ -28,6 +30,8 @@ class ProductResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
 
     protected static ?int $navigationSort = 2;
+
+    protected $with = ['productVariation.variationAttributes'];
 
     public static function form(Form $form): Form
     {
@@ -58,8 +62,92 @@ class ProductResource extends Resource
                 ])
                 ->relationship('images')  // Relationship to the Image model (handles the foreign key linking)
                 ->dehydrated(false),  // Prevent data from being dehydrated (kept in request)
+            // Managing Product Variations
+            Forms\Components\Repeater::make('productVariation')
+            ->columnSpan('full')
+            ->columns(4)
+            ->relationship('productVariation')
+            ->label('Product Variations')
+            ->schema([
+                // Variation fields
+                Forms\Components\TextInput::make('price')
+                    ->label('Variation Price')
+                    ->numeric()
+                    ->nullable(),
+                Forms\Components\TextInput::make('stock')
+                    ->label('Variation Stock')
+                    ->numeric()
+                    ->nullable(),
+                Forms\Components\TextInput::make('sku')
+                    ->label('SKU')
+                    ->nullable(),
+                Forms\Components\TextInput::make('discount')
+                    ->label('Discount')
+                    ->numeric()
+                    ->nullable(),
+                    //add filament form fields for attibute and attribute value here
+
+                Repeater::make('variationAttributes')
+                    ->relationship('variationAttributes')
+                    ->columnSpan('full')
+                    ->columns(2)
+                    ->label('Attributes')
+                    ->schema([
+                        Select::make('attribute_id')
+                            ->label('Attribute')
+                            ->options(\App\Models\Attribute::query()->pluck('name', 'id')->toArray())
+                            ->searchable() // Enable searching
+                            ->required()
+                            ->reactive()
+                            ->afterStateUpdated(function (callable $get, callable $set) {
+                                $set('attribute_value_id', null); // Reset attribute_value_id when attribute changes
+                            })
+                            ->createOptionForm([
+                                Forms\Components\TextInput::make('name')
+                                    ->required(),
+                                Forms\Components\TextInput::make('slug')
+                                    ->required(),
+                            ])
+                            ->createOptionUsing(function (array $data) {
+                                return \App\Models\Attribute::create($data)->id;
+                            })
+                            ->disableOptionsWhenSelectedInSiblingRepeaterItems(),
+
+
+                        Select::make('attribute_value_id')
+                            ->label('Attribute Value')
+                            ->options(function (callable $get) {
+                                $attributeId = $get('attribute_id');
+                                return $attributeId
+                                    ? \App\Models\AttributeValue::where('attribute_id', $attributeId)
+                                        ->pluck('value', 'id')
+                                    : [];
+                            })
+                            ->createOptionForm([
+                                Forms\Components\TextInput::make('value')
+                                    ->required(),
+                                Forms\Components\TextInput::make('slug')
+                                    ->required(),
+                            ])
+                            ->createOptionUsing(function (array $data, callable $get) {
+                                // Create the new Attribute Value
+                                return \App\Models\AttributeValue::create([
+                                    'attribute_id' => $get('attribute_id'), // Make sure to pass the attribute_id here
+                                    'value' => $data['value'],
+                                    'slug' => $data['slug'],
+                                ])->id;
+                            })
+                            ->searchable() // Enable searching
+                            ->required()
+                    ])
+                    ->addActionLabel('Add Attribute')
+
+            ])
+            ->addActionLabel('Add Variation')
         ]);
     }
+
+
 
     public static function table(Table $table): Table
     {

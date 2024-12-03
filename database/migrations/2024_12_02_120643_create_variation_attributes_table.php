@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('variation_attributes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_variation_id');
+            $table->foreignId('product_variation_id')->constrained()->onDelete('cascade');
+            $table->foreignId('attribute_id');
             $table->foreignId('attribute_value_id');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class VariationAttribute extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $casts = [
         'id' => 'integer',
@@ -16,12 +19,12 @@ class VariationAttribute extends Model
         'attribute_value_id' => 'integer',
     ];
 
-    public function productVariation(): BelongsTo
+    public function productVariation()
     {
         return $this->belongsTo(ProductVariation::class);
     }
 
-    public function attributeValue(): BelongsTo
+    public function attributeValue()
     {
         return $this->belongsTo(AttributeValue::class);
     }

@@ -33,7 +33,7 @@ class Product extends Model
         return $this->hasMany(Review::class);
     }
 
-    public function ProductVariation()
+    public function productVariation()
     {
         return $this->hasMany(ProductVariation::class);
     }
@@ -47,14 +47,16 @@ class Product extends Model
                     $image->forceDeleteWithFile();
                 });
                 $product->reviews()->forceDelete();
+                $product->productVariation()->forceDelete();
             } else {
                 $product->reviews()->delete();
+                $product->productVariation()->delete();
             }
         });
 
         static::restoring(function (Product $product) {
-            // Restore associated images and reviews
             $product->reviews()->withTrashed()->restore();
+            $product->productVariation()->withTrashed()->restore();
         });
     }
 }
