@@ -17,8 +17,11 @@ class AttributeValueResource extends Resource
 {
     protected static ?string $model = AttributeValue::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = 'Products';
+    //protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    protected static ?string $navigationGroup = 'Products Settings';
+
+    protected static bool $shouldRegisterNavigation = false;
 
     public static function form(Form $form): Form
     {
@@ -34,7 +37,7 @@ class AttributeValueResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('slug')
                     ->label('Slug')
-                    ->required()
+                    //->required()
                     ->maxLength(255),
             ]);
     }

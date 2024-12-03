@@ -17,8 +17,9 @@ class AttributeResource extends Resource
 {
     protected static ?string $model = Attribute::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = 'Products';
+    //protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    protected static ?string $navigationGroup = 'Products Settings';
 
     public static function form(Form $form): Form
     {
@@ -28,7 +29,7 @@ class AttributeResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('slug')
-                    ->required()
+                    //->required()
                     ->maxLength(255),
             ]);
     }
@@ -56,7 +57,7 @@ class AttributeResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\AttributeValuesRelationManager::class,
         ];
     }
 

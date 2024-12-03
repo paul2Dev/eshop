@@ -29,6 +29,8 @@ class OrderItemResource extends Resource
 
     protected static ?int $navigationSort = 4;
 
+    protected static bool $shouldRegisterNavigation = false;
+
     public static function form(Form $form): Form
     {
         return $form->schema(OrderItem::getForm());
@@ -75,4 +77,5 @@ class OrderItemResource extends Resource
             'edit' => Pages\EditOrderItem::route('/{record}/edit'),
         ];
     }
+
 }

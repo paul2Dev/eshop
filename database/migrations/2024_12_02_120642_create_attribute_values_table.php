@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('attribute_id')->constrained()->onDelete('cascade');
             $table->string('value');
-            $table->string('slug')->unique();
+            $table->string('slug')->unique()->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

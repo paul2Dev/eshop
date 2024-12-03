@@ -20,7 +20,10 @@ class ProductVariationResource extends Resource
     protected static ?string $model = ProductVariation::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-square-3-stack-3d';
+
     protected static ?string $navigationGroup = 'Products';
+
+    protected static bool $shouldRegisterNavigation = false;
 
     public static function form(Form $form): Form
     {
@@ -86,10 +89,5 @@ class ProductVariationResource extends Resource
             'create' => Pages\CreateProductVariation::route('/create'),
             'edit' => Pages\EditProductVariation::route('/{record}/edit'),
         ];
-    }
-
-    public static function shouldRegisterNavigation(): bool
-    {
-        return false;
     }
 }

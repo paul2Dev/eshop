@@ -105,8 +105,8 @@ class ProductResource extends Resource
                             ->createOptionForm([
                                 Forms\Components\TextInput::make('name')
                                     ->required(),
-                                Forms\Components\TextInput::make('slug')
-                                    ->required(),
+                                // Forms\Components\TextInput::make('slug')
+                                //     ->required(),
                             ])
                             ->createOptionUsing(function (array $data) {
                                 return \App\Models\Attribute::create($data)->id;
@@ -126,15 +126,15 @@ class ProductResource extends Resource
                             ->createOptionForm([
                                 Forms\Components\TextInput::make('value')
                                     ->required(),
-                                Forms\Components\TextInput::make('slug')
-                                    ->required(),
+                                // Forms\Components\TextInput::make('slug')
+                                //     ->required(),
                             ])
                             ->createOptionUsing(function (array $data, callable $get) {
                                 // Create the new Attribute Value
                                 return \App\Models\AttributeValue::create([
                                     'attribute_id' => $get('attribute_id'), // Make sure to pass the attribute_id here
                                     'value' => $data['value'],
-                                    'slug' => $data['slug'],
+                                    //'slug' => $data['slug'],
                                 ])->id;
                             })
                             ->searchable() // Enable searching

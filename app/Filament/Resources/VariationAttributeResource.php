@@ -18,7 +18,10 @@ class VariationAttributeResource extends Resource
     protected static ?string $model = VariationAttribute::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
     protected static ?string $navigationGroup = 'Products';
+
+    protected static bool $shouldRegisterNavigation = false;
 
     public static function form(Form $form): Form
     {
@@ -74,10 +77,5 @@ class VariationAttributeResource extends Resource
             'create' => Pages\CreateVariationAttribute::route('/create'),
             'edit' => Pages\EditVariationAttribute::route('/{record}/edit'),
         ];
-    }
-
-    public static function shouldRegisterNavigation(): bool
-    {
-        return false;
     }
 }
