@@ -3,20 +3,14 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ReviewResource\Pages;
-use App\Filament\Resources\ReviewResource\RelationManagers;
 use App\Models\Review;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use App\Enums\ReviewStatus;
 
 

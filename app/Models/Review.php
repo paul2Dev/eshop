@@ -19,6 +19,7 @@ use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\ForceDeleteAction;
 use Filament\Tables\Actions\RestoreAction;
 use Filament\Tables\Actions\ActionGroup;
+use Filament\Forms\Components\Section;
 
 
 class Review extends Model
@@ -45,31 +46,36 @@ class Review extends Model
     public static function getForm($productID = null): array
     {
         return [
-            Select::make('product_id')
-                ->label('Product')
-                ->relationship('product', 'name')
-                ->required()
-                ->disabled(fn ($get) => $get('id') !== null)
-                ->hidden(function() use ($productID) {
-                    return $productID !== null;
-                }),
-            Select::make('user_id')
-                ->label('User')
-                ->relationship('user', 'name')
-                ->required(),
-            TextInput::make('rating')
-                ->label('Rating')
-                ->required(),
-            TextInput::make('title')
-                ->label('Title')
-                ->required(),
-            Textarea::make('comment')
-                ->label('Comment')
-                ->required(),
-            Select::make('status')
-                ->enum(ReviewStatus::class)
-                ->options(ReviewStatus::class)
-                ->required(),
+            Section::make()
+                ->schema([
+                    Select::make('product_id')
+                        ->label('Product')
+                        ->relationship('product', 'name')
+                        ->required()
+                        ->disabled(fn ($get) => $get('id') !== null)
+                        ->hidden(function() use ($productID) {
+                            return $productID !== null;
+                        }),
+                    Select::make('user_id')
+                        ->label('User')
+                        ->relationship('user', 'name')
+                        ->required(),
+                    Select::make('status')
+                        ->enum(ReviewStatus::class)
+                        ->options(ReviewStatus::class)
+                        ->required(),
+                    TextInput::make('title')
+                        ->label('Title')
+                        ->required()->columnSpan(2),
+                    TextInput::make('rating')
+                        ->label('Rating')
+                        ->required(),
+                    Textarea::make('comment')
+                        ->label('Comment')
+                        ->required()
+                        ->columnSpanFull(),
+                ])->columns(3),
+
         ];
     }
 

@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Section;
 
 class CategoryResource extends Resource
 {
@@ -27,13 +28,16 @@ class CategoryResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            TextInput::make('name')
-                ->required()
-                ->maxLength(255),
-            TextInput::make('slug')
-                ->required()
-                ->unique(Category::class, 'slug', ignoreRecord: true),
-            Textarea::make('description')->nullable(),
+            Section::make()
+            ->schema([
+                TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+                TextInput::make('slug')
+                    ->required()
+                    ->unique(Category::class, 'slug', ignoreRecord: true),
+                Textarea::make('description')->nullable()->columnSpanFull(),
+            ])->columns(2)
         ]);
     }
 

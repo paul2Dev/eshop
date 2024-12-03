@@ -14,10 +14,10 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use App\Enums\OrderStatus;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Section;
 
 class OrderResource extends Resource
 {
@@ -30,20 +30,23 @@ class OrderResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Select::make('user_id')
-                ->label('User')
-                ->relationship('user', 'name')
-                ->required()
-                ->disabled(fn ($get) => $get('id') !== null),
-            Placeholder::make('total')
-                ->label('Total')
-                ->content(function (Order $record) {
-                    return $record->total ? $record->total : null;
-                }),
-            Select::make('status')
-                ->enum(OrderStatus::class)
-                ->options(OrderStatus::class)
-                ->required(),
+            Section::make()
+                ->schema([
+                    Select::make('user_id')
+                        ->label('User')
+                        ->relationship('user', 'name')
+                        ->required()
+                        ->disabled(fn ($get) => $get('id') !== null),
+                    Select::make('status')
+                        ->enum(OrderStatus::class)
+                        ->options(OrderStatus::class)
+                        ->required(),
+                    Placeholder::make('total')
+                        ->label('Total')
+                        ->content(function (Order $record) {
+                            return $record->total ? $record->total : null;
+                        }),
+                ])->columns(3),
         ]);
     }
 

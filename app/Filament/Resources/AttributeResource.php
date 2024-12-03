@@ -10,8 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\Section;
 
 class AttributeResource extends Resource
 {
@@ -25,12 +24,16 @@ class AttributeResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('slug')
-                    //->required()
-                    ->maxLength(255),
+                Section::make()
+                ->schema([
+                    Forms\Components\TextInput::make('name')
+                        ->required()
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('slug')
+                        //->required()
+                        ->maxLength(255),
+                ])->columns(2),
+
             ]);
     }
 
